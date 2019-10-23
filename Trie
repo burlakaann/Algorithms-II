@@ -1,0 +1,74 @@
+#include <iostream>
+
+using namespace std;
+
+class Trie{
+private:
+    struct wierzch{
+        string imie;
+        wierzch **dzieci;
+        wierzch(){
+            dzieci = new wierzch*[10];
+            for(int i = 0; i < 10; i++){
+                dzieci[i] = NULL;
+            }
+        }
+    };
+    wierzch *korzen;
+public:
+    Trie();
+    void insert(string, string);
+    void search(string);
+
+};
+Trie::Trie(){
+    korzen = new wierzch;
+}
+void Trie::insert(string slowo, string name){
+    wierzch *z_p = korzen;
+    int len = (int)slowo.size();
+    for(int i = 0; i < len; i++){
+        if(z_p->dzieci[slowo[i]-'0'] == NULL){
+            z_p->dzieci[slowo[i]-'0'] = new wierzch;
+        }
+        z_p = z_p->dzieci[slowo[i]-'0'];
+    }
+    z_p->imie = name;
+}
+void Trie::search(string slowo){
+    bool znajdz = true;
+    wierzch *z_p = korzen;
+    int len = slowo.length();
+    for(int i = 0; i < len; i++){
+        if(z_p->dzieci[slowo[i]-'0'] == NULL){
+            znajdz = false;
+            break;
+        }
+        z_p = z_p->dzieci[slowo[i]-'0'];
+    }
+    if(znajdz == true)
+        cout << z_p->imie << "\n";
+    else
+        cout << "-\n";
+}
+
+int main(){
+    Trie t;
+    int N;
+    char op;
+    string slowo;
+    string name;
+    cin >> N;
+    for(int i = 0; i < N; i++){
+        cin >> op;
+        if(op == 'A'){
+            cin >> slowo;
+            cin >> name;
+            t.insert(slowo,name);
+        }
+        else{
+            cin >> slowo;
+            t.search(slowo);
+        }
+    }
+}
